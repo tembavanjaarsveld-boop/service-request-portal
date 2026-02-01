@@ -1,72 +1,714 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Service Request Portal</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif; background: #ffffff; min-height: 100vh; -webkit-font-smoothing: antialiased; }
-        .header { padding: 3rem 2rem 2rem; text-align: center; background: linear-gradient(180deg, #f5f5f7 0%, #ffffff 100%); }
-        .header h1 { font-size: 2.25rem; font-weight: 600; color: #1d1d1f; margin-bottom: 0.75rem; letter-spacing: -0.02em; }
-        .header p { font-size: 1.125rem; color: #86868b; max-width: 500px; margin: 0 auto; }
-        .cards-container { padding: 2rem; max-width: 1000px; margin: 0 auto; }
-        .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
-        @media (max-width: 768px) { .cards-grid { grid-template-columns: 1fr; } .header h1 { font-size: 1.75rem; } }
-        .card { background: #ffffff; border-radius: 1.25rem; padding: 2rem 1.5rem; cursor: pointer; transition: all 0.25s ease; border: 2px solid #e5e5e7; text-align: center; text-decoration: none; display: block; }
-        .card:hover { transform: translateY(-4px); }
-        .card-icon { width: 64px; height: 64px; margin: 0 auto 1.25rem; display: flex; align-items: center; justify-content: center; background: #f5f5f7; border-radius: 16px; transition: all 0.25s ease; }
-        .card:hover .card-icon svg { stroke: #ffffff; }
-        .card-icon svg { width: 32px; height: 32px; stroke: #1d1d1f; stroke-width: 1.5; fill: none; transition: all 0.25s ease; }
-        .card-title { font-size: 1.25rem; font-weight: 600; color: #1d1d1f; margin-bottom: 0.625rem; }
-        .card-subtitle { font-size: 0.9375rem; color: #86868b; line-height: 1.5; }
-        .card-bau:hover { border-color: #34C759; box-shadow: 0 8px 30px rgba(52, 199, 89, 0.18); }
-        .card-bau:hover .card-icon { background: #34C759; }
-        .card-ci:hover { border-color: #007AFF; box-shadow: 0 8px 30px rgba(0, 122, 255, 0.18); }
-        .card-ci:hover .card-icon { background: #007AFF; }
-        .card-project:hover { border-color: #FF9500; box-shadow: 0 8px 30px rgba(255, 149, 0, 0.18); }
-        .card-project:hover .card-icon { background: #FF9500; }
-        .guide-section { text-align: center; padding: 2rem; background: #f5f5f7; border-radius: 1rem; margin-top: 1rem; }
-        .guide-section h3 { font-size: 1.125rem; color: #1d1d1f; margin-bottom: 0.5rem; }
-        .guide-section p { color: #86868b; margin-bottom: 1rem; }
-        .guide-button { display: inline-flex; align-items: center; gap: 0.5rem; background: #1d1d1f; color: #ffffff; padding: 0.875rem 1.5rem; border-radius: 0.75rem; text-decoration: none; font-weight: 500; transition: all 0.2s ease; }
-        .guide-button:hover { background: #007AFF; transform: translateY(-2px); }
-        .guide-button svg { width: 20px; height: 20px; stroke: currentColor; fill: none; }
-        .footer { text-align: center; padding: 2rem; color: #86868b; font-size: 0.875rem; }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DTI Intake Agent — ACRRM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body, #root { height: 100%; }
+  body { font-family: 'Sora', sans-serif; background: #F8F8F6; }
+
+  @keyframes msgLeft {
+    from { opacity: 0; transform: translateY(8px) translateX(-8px); }
+    to   { opacity: 1; transform: translateY(0) translateX(0); }
+  }
+  @keyframes msgRight {
+    from { opacity: 0; transform: translateY(8px) translateX(8px); }
+    to   { opacity: 1; transform: translateY(0) translateX(0); }
+  }
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(10px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes dotPulse {
+    0%, 80%, 100% { opacity: 0.25; transform: scale(0.75); }
+    40% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes dropPulse {
+    0%, 100% { border-color: rgba(13,148,136,0.3); }
+    50% { border-color: rgba(13,148,136,0.7); }
+  }
+  @keyframes successPop {
+    0% { transform: scale(0.8); opacity: 0; }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .chat-scroll::-webkit-scrollbar { width: 5px; }
+  .chat-scroll::-webkit-scrollbar-track { background: transparent; }
+  .chat-scroll::-webkit-scrollbar-thumb { background: #D6D3D1; border-radius: 10px; }
+  .chat-scroll::-webkit-scrollbar-thumb:hover { background: #A8A29E; }
+
+  .type-card {
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative; overflow: hidden;
+    background: white; text-align: left; width: 100%; cursor: pointer;
+    border-radius: 14px; padding: 14px 16px;
+  }
+  .type-card::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, transparent 60%, rgba(0,0,0,0.02));
+    pointer-events: none;
+  }
+  .type-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px -8px rgba(0,0,0,0.12); }
+  .type-card:active { transform: translateY(-1px); }
+
+  .quick-reply-btn {
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    background: white; border: 1.5px solid #E7E5E4; border-radius: 12px;
+    padding: 10px 16px; font-family: 'Sora', sans-serif; font-size: 13px;
+    color: #44403C; cursor: pointer; text-align: left;
+  }
+  .quick-reply-btn:hover {
+    border-color: #14B8A6; background: #F0FDFA; color: #0F766E;
+    transform: translateY(-2px); box-shadow: 0 4px 12px rgba(13,148,136,0.15);
+  }
+  .quick-reply-btn:active { transform: translateY(0); }
+
+  .summary-card {
+    background: linear-gradient(135deg, #FAFAF9 0%, #F5F5F4 100%);
+    border: 1.5px solid #E7E5E4; border-left: 4px solid #0D9488;
+    border-radius: 16px; padding: 20px; margin-top: 4px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+  .summary-card-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+    padding-bottom: 12px; border-bottom: 1px solid #E7E5E4;
+  }
+  .summary-card-title {
+    font-weight: 600; font-size: 15px; color: #1C1917; letter-spacing: -0.3px;
+  }
+  .summary-card-badge {
+    background: linear-gradient(135deg, #0D9488, #0F766E); color: white;
+    font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px;
+    letter-spacing: 0.3px;
+  }
+  .summary-field { margin-bottom: 10px; }
+  .summary-field-label { font-size: 11px; color: #78716C; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+  .summary-field-value { font-size: 14px; color: #1C1917; line-height: 1.5; }
+
+  @keyframes quickReplyIn {
+    from { opacity: 0; transform: translateY(8px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .input-ring { transition: border-color 0.2s, box-shadow 0.2s; }
+  .input-ring:focus-within {
+    border-color: #14B8A6 !important;
+    box-shadow: 0 0 0 3px rgba(20,184,166,0.1);
+  }
+
+  textarea { font-family: 'Sora', sans-serif; resize: none; }
+  textarea:focus, button:focus { outline: none; }
+  button:focus-visible { outline: 2px solid #14B8A6; outline-offset: 2px; }
+
+  .submit-btn {
+    transition: all 0.25s ease; position: relative; overflow: hidden;
+  }
+  .submit-btn:not(:disabled):hover {
+    box-shadow: 0 8px 24px -6px rgba(13,148,136,0.4); transform: translateY(-1px);
+  }
+  .submit-btn:not(:disabled):active { transform: translateY(0); }
+  .submit-btn::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .file-chip { display: flex; align-items: center; gap: 8px; padding: 5px 10px 5px 5px;
+    background: #F5F5F4; border: 1px solid #E7E5E4; border-radius: 10px; font-size: 12px; flex-shrink: 0; }
+  .file-chip-remove { background: none; border: none; cursor: pointer; padding: 2px;
+    color: #A8A29E; display: flex; line-height: 0; transition: color 0.15s; }
+  .file-chip-remove:hover { color: #EF4444; }
+
+  .attach-btn { background: none; border: none; cursor: pointer; color: #A8A29E;
+    padding: 6px 2px; display: flex; align-items: center; transition: color 0.2s; flex-shrink: 0; }
+  .attach-btn:hover { color: #0D9488; }
+</style>
 </head>
 <body>
-    <div class="header">
-        <h1>Service Request Portal</h1>
-        <p>Select the type of request you want to submit to the development team</p>
+<div id="root"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.5/babel.min.js"></script>
+
+<script type="text/babel">
+const { useState, useRef, useEffect, useCallback } = React;
+
+// ═══════════════════════════════════════════════════════════
+//  CONFIG — Change these for production
+// ═══════════════════════════════════════════════════════════
+const MODE = "webhook";   // "claude" for demo | "webhook" for n8n production
+const WEBHOOK_URL = "https://temba.app.n8n.cloud/webhook/157b0d15-cc29-4a88-bdaf-826fc492b547/chat";
+const MODEL = "claude-sonnet-4-20250514";
+
+// ─── REQUEST TYPES ───────────────────────────────────────
+const TYPES = [
+  { id: "bau", label: "BAU", title: "Quick Fix / Update", desc: "Bug fixes, content changes, minor tweaks", emoji: "⚡", accent: "#059669", accentBg: "#ECFDF5", accentBorder: "#A7F3D0" },
+  { id: "ci", label: "Config Item", title: "Config Change", desc: "System settings, fields, permissions", emoji: "⚙️", accent: "#4F46E5", accentBg: "#EEF2FF", accentBorder: "#C7D2FE" },
+  { id: "project", label: "Project", title: "Feature / Initiative", desc: "Workflows, integrations, new builds", emoji: "🧩", accent: "#D97706", accentBg: "#FFFBEB", accentBorder: "#FDE68A" },
+  { id: "help", label: "Not Sure", title: "Help Me Decide", desc: "Describe the problem, I'll sort it", emoji: "💬", accent: "#7C3AED", accentBg: "#F5F3FF", accentBorder: "#DDD6FE" },
+];
+
+const GREETING = `Hey! 👋 I'm the DTI intake agent — I help you submit requests to the Digital Technology & Innovation team.\n\nWhat do you need help with?`;
+
+const SYSTEM_PROMPT = `You are the DTI Intake Agent for ACRRM (Australian College of Rural and Remote Medicine). You help staff submit technology requests to the Digital Technology & Innovation team through natural conversation.
+
+## Your Style
+- Warm, professional, concise — like a helpful colleague, not a form
+- Ask ONE question at a time. Never stack multiple questions.
+- Use what's already been provided — never re-ask
+- Keep responses to 2-3 sentences max per turn
+- If files are uploaded, acknowledge them and extract any relevant details
+- Use Australian English spelling
+
+## Request Types & Required Fields
+
+### BAU (Business As Usual)
+Quick fixes, content updates, bug fixes, banner changes, minor tweaks. Usually done within days.
+Required: (1) Requestor name & email (2) What needs to be done — specific (3) Which system/application (4) Urgency: Low / Medium / High / Critical
+Optional: Screenshot or reference
+
+### Config Item (CI)
+Configuration changes — system settings, form fields, dropdown options, user permissions.
+Required: (1) Requestor name & email (2) What configuration needs to change (3) Current state vs desired state (4) Which system (5) Who is affected (6) Urgency: Low / Medium / High / Critical
+
+### Project
+New features, workflow improvements, integrations, or major changes needing planning.
+Required: (1) Requestor name & email (2) Problem statement — what's the pain? (3) Desired outcome — what does success look like? (4) Business sponsor (5) Systems involved (6) Timeline expectations (7) Known constraints or dependencies (8) Urgency: Low / Medium / High / Critical
+
+## Conversation Flow
+1. The user will either select a type via card (you'll see "[Selected: TYPE]") or describe their need freely
+2. If they selected a type, skip classification and go straight to collecting info
+3. If they described freely, classify it, confirm with them, then collect
+4. For "Not Sure", ask what's going on and classify from their description
+5. Collect required fields one at a time through natural conversation
+6. When ALL required fields are collected, present a summary
+
+## Summary Format
+When you have everything needed, respond with EXACTLY this format:
+
+📋 **Request Summary**
+
+**Type:** [BAU / Config Item / Project]
+**Requestor:** [Name] ([Email])
+**Description:** [Brief summary]
+[...all collected fields as **Label:** Value...]
+**Urgency:** [Level]
+
+---
+Does this look right? Hit submit when you're ready, or let me know if anything needs changing.`;
+
+// ─── UTILITIES ───────────────────────────────────────────
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+const fmtSize = (b) => {
+  if (b < 1024) return b + " B";
+  if (b < 1048576) return (b / 1024).toFixed(1) + " KB";
+  return (b / 1048576).toFixed(1) + " MB";
+};
+
+// Detect numbered options in AI responses (e.g., "1. BAU - Bug fix...")
+function extractQuickReplies(text) {
+  if (!text) return { options: [], cleanText: text };
+
+  const lines = text.split('\n');
+  const options = [];
+  const cleanLines = [];
+  let foundOptions = false;
+
+  for (const line of lines) {
+    // Match patterns like "1. Option text" or "1) Option text"
+    const match = line.match(/^(\d+)[.\)]\s*(.+)$/);
+    if (match && parseInt(match[1]) <= 5) {
+      foundOptions = true;
+      options.push({
+        number: match[1],
+        text: match[2].trim(),
+        full: line.trim()
+      });
+    } else {
+      cleanLines.push(line);
+    }
+  }
+
+  // Only return options if we found 2+ numbered items
+  if (options.length >= 2) {
+    // Remove trailing prompt like "Just reply with 1, 2, 3..."
+    const filtered = cleanLines.filter(l => !l.toLowerCase().includes('reply with') && !l.toLowerCase().includes('just type'));
+    return { options, cleanText: filtered.join('\n').trim() };
+  }
+
+  return { options: [], cleanText: text };
+}
+
+// Check if message is a summary (contains 📋)
+function isSummaryMessage(text) {
+  return text && text.includes('📋');
+}
+
+// Parse summary into structured fields
+function parseSummary(text) {
+  if (!text) return null;
+
+  const fields = [];
+  const lines = text.split('\n');
+
+  for (const line of lines) {
+    // Match **Label:** Value patterns
+    const match = line.match(/\*\*([^*]+):\*\*\s*(.+)/);
+    if (match) {
+      fields.push({ label: match[1].trim(), value: match[2].trim() });
+    }
+  }
+
+  // Extract the confirmation text (after ---)
+  const afterDivider = text.split('---')[1];
+  const confirmText = afterDivider ? afterDivider.trim() : '';
+
+  return { fields, confirmText };
+}
+
+function parseMd(text) {
+  if (!text) return null;
+  const lines = text.split("\n");
+  const out = [];
+  let k = 0;
+  for (const raw of lines) {
+    if (raw.trim() === "---") { out.push(<hr key={k++} style={{ border: "none", borderTop: "1px solid #E7E5E4", margin: "10px 0" }} />); continue; }
+    if (raw.trim() === "") { out.push(<div key={k++} style={{ height: 6 }} />); continue; }
+    const segs = []; let rest = raw; let s = 0;
+    while (rest.includes("**")) {
+      const a = rest.indexOf("**");
+      if (a > 0) segs.push(<span key={s++}>{rest.slice(0, a)}</span>);
+      rest = rest.slice(a + 2);
+      const b = rest.indexOf("**");
+      if (b === -1) { segs.push(<span key={s++}>**{rest}</span>); rest = ""; break; }
+      segs.push(<strong key={s++} style={{ fontWeight: 600 }}>{rest.slice(0, b)}</strong>);
+      rest = rest.slice(b + 2);
+    }
+    if (rest) segs.push(<span key={s++}>{rest}</span>);
+    if (raw.trim().startsWith("- ")) {
+      out.push(<div key={k++} style={{ display: "flex", gap: 8, paddingLeft: 2 }}><span style={{ color: "#A8A29E", flexShrink: 0 }}>•</span><span>{segs}</span></div>);
+    } else { out.push(<div key={k++}>{segs}</div>); }
+  }
+  return out;
+}
+
+// ─── ICONS ───────────────────────────────────────────────
+const SendIcon = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>);
+const ClipIcon = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>);
+const XIcon = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>);
+
+// ─── SUB-COMPONENTS ──────────────────────────────────────
+
+function TypeCard({ type, onClick, delay }) {
+  return (
+    <button className="type-card"
+      onClick={() => onClick(type)}
+      style={{ border: `1.5px solid ${type.accentBorder}`, borderLeft: `4px solid ${type.accent}`,
+        animation: `cardIn 0.45s cubic-bezier(0.22,1,0.36,1) ${delay}ms both` }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
+        <span style={{ fontSize: 17, lineHeight: 1 }}>{type.emoji}</span>
+        <span style={{ fontWeight: 600, fontSize: 13.5, color: "#1C1917", letterSpacing: -0.2 }}>{type.title}</span>
+      </div>
+      <div style={{ fontSize: 12, color: "#78716C", lineHeight: 1.45, paddingLeft: 25 }}>{type.desc}</div>
+    </button>
+  );
+}
+
+function TypingDots() {
+  return (
+    <div style={{ display: "flex", alignItems: "flex-start", marginBottom: 18, animation: "fadeIn 0.25s ease" }}>
+      <div style={{ padding: "16px 20px", borderRadius: "20px 20px 20px 6px", background: "white",
+        border: "1px solid #E7E5E4", boxShadow: "0 1px 4px rgba(0,0,0,0.03)", display: "flex", gap: 5, alignItems: "center" }}>
+        {[0, 1, 2].map((i) => (
+          <div key={i} style={{ width: 7, height: 7, borderRadius: "50%", background: "#A8A29E",
+            animation: `dotPulse 1.4s ease-in-out infinite`, animationDelay: `${i * 0.2}s` }} />
+        ))}
+      </div>
     </div>
-    <div class="cards-container">
-        <div class="cards-grid">
-            <a class="card card-bau" href="https://temba.app.n8n.cloud/webhook/157b0d15-cc29-4a88-bdaf-826fc492b547/chat?category=BAU">
-                <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
-                <div class="card-title">BAU Request</div>
-                <div class="card-subtitle">Bug fix, minor enhancement, or small change (&lt;2 days)</div>
-            </a>
-            <a class="card card-ci" href="https://temba.app.n8n.cloud/webhook/157b0d15-cc29-4a88-bdaf-826fc492b547/chat?category=CI">
-                <div class="card-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
-                <div class="card-title">Continuous Improvement</div>
-                <div class="card-subtitle">Improve an existing process, workflow, or system</div>
-            </a>
-            <a class="card card-project" href="https://temba.app.n8n.cloud/webhook/157b0d15-cc29-4a88-bdaf-826fc492b547/chat?category=PROJECT">
-                <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></div>
-                <div class="card-title">New Project</div>
-                <div class="card-subtitle">New capability, major upgrade, or initiative (&gt;5 days)</div>
-            </a>
-        </div>
-        <div class="guide-section">
-            <h3>Not sure which to choose?</h3>
-            <p>No problem! Describe what you need and our assistant will help categorize it</p>
-            <a href="https://temba.app.n8n.cloud/webhook/157b0d15-cc29-4a88-bdaf-826fc492b547/chat" class="guide-button">
-                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke-width="1.5"/></svg>
-                Start a Conversation
-            </a>
-        </div>
+  );
+}
+
+function QuickReplyButtons({ options, onSelect, disabled }) {
+  if (!options || options.length === 0) return null;
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 12, width: "100%", maxWidth: "88%" }}>
+      {options.map((opt, i) => (
+        <button
+          key={i}
+          className="quick-reply-btn"
+          onClick={() => !disabled && onSelect(opt.number, opt.text)}
+          disabled={disabled}
+          style={{
+            animation: `quickReplyIn 0.35s cubic-bezier(0.22,1,0.36,1) ${i * 80}ms both`,
+            opacity: disabled ? 0.6 : 1,
+            cursor: disabled ? "default" : "pointer"
+          }}
+        >
+          <span style={{
+            display: "inline-flex", alignItems: "center", justifyContent: "center",
+            width: 22, height: 22, borderRadius: "50%", marginRight: 10,
+            background: "linear-gradient(135deg, #0D9488, #0F766E)", color: "white",
+            fontSize: 12, fontWeight: 600
+          }}>{opt.number}</span>
+          {opt.text}
+        </button>
+      ))}
     </div>
-    <div class="footer">PMO - Development Team Request Portal</div>
+  );
+}
+
+function SummaryCard({ text }) {
+  const parsed = parseSummary(text);
+  if (!parsed || parsed.fields.length === 0) return null;
+
+  // Find the type for badge styling
+  const typeField = parsed.fields.find(f => f.label.toLowerCase() === 'type');
+  const typeValue = typeField?.value || 'Request';
+
+  return (
+    <div className="summary-card" style={{ animation: "cardIn 0.45s cubic-bezier(0.22,1,0.36,1)" }}>
+      <div className="summary-card-header">
+        <span style={{ fontSize: 20 }}>📋</span>
+        <span className="summary-card-title">Request Summary</span>
+        <span className="summary-card-badge">{typeValue}</span>
+      </div>
+      <div style={{ display: "grid", gap: 12 }}>
+        {parsed.fields.filter(f => f.label.toLowerCase() !== 'type').map((field, i) => (
+          <div key={i} className="summary-field">
+            <div className="summary-field-label">{field.label}</div>
+            <div className="summary-field-value">{field.value}</div>
+          </div>
+        ))}
+      </div>
+      {parsed.confirmText && (
+        <div style={{ marginTop: 16, paddingTop: 12, borderTop: "1px solid #E7E5E4", fontSize: 13, color: "#57534E", lineHeight: 1.5 }}>
+          {parsed.confirmText}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MessageBubble({ msg, cardsActive, onCardClick, onQuickReply, isLatest, isTyping }) {
+  const isUser = msg.role === "user";
+  const isSummary = !isUser && isSummaryMessage(msg.content);
+  const { options, cleanText } = !isUser && !isSummary ? extractQuickReplies(msg.content) : { options: [], cleanText: msg.content };
+  const showQuickReplies = isLatest && !isTyping && options.length > 0;
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: isUser ? "flex-end" : "flex-start",
+      marginBottom: 18, animation: `${isUser ? "msgRight" : "msgLeft"} 0.35s cubic-bezier(0.22,1,0.36,1)` }}>
+      {msg.files?.length > 0 && (
+        <div style={{ display: "flex", gap: 8, marginBottom: 8, flexWrap: "wrap", justifyContent: isUser ? "flex-end" : "flex-start" }}>
+          {msg.files.map((f, i) =>
+            f.type?.startsWith("image/") ? (
+              <img key={i} src={f.preview} alt={f.name} style={{ maxWidth: 180, maxHeight: 140, borderRadius: 14, objectFit: "cover", border: "1px solid #E7E5E4" }} />
+            ) : (
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, background: isUser ? "rgba(255,255,255,0.15)" : "#F5F5F4",
+                borderRadius: 10, padding: "8px 12px", fontSize: 12, color: isUser ? "white" : "#44403C" }}>📄 {f.name}</div>
+            )
+          )}
+        </div>
+      )}
+
+      {/* Summary Card for 📋 messages */}
+      {isSummary ? (
+        <SummaryCard text={msg.content} />
+      ) : (
+        <div style={{ maxWidth: "88%", padding: "14px 18px",
+          borderRadius: isUser ? "20px 20px 6px 20px" : "20px 20px 20px 6px",
+          background: isUser ? "linear-gradient(135deg, #0D9488 0%, #0F766E 100%)" : "white",
+          color: isUser ? "white" : "#292524",
+          border: isUser ? "none" : "1px solid #E7E5E4",
+          boxShadow: isUser ? "0 2px 12px rgba(13,148,136,0.2)" : "0 1px 4px rgba(0,0,0,0.03)",
+          fontSize: 14, lineHeight: 1.65, letterSpacing: -0.1 }}>
+          {parseMd(showQuickReplies ? cleanText : msg.content)}
+        </div>
+      )}
+
+      {/* Quick Reply Buttons */}
+      {showQuickReplies && (
+        <QuickReplyButtons options={options} onSelect={onQuickReply} disabled={isTyping} />
+      )}
+
+      {/* Type Selection Cards */}
+      {msg.showCards && cardsActive && (
+        <div style={{ width: "100%", maxWidth: "88%", marginTop: 14 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+            {TYPES.map((t, i) => (<TypeCard key={t.id} type={t} onClick={onCardClick} delay={200 + i * 100} />))}
+          </div>
+          <p style={{ textAlign: "center", marginTop: 14, fontSize: 12, color: "#A8A29E", letterSpacing: 0.2 }}>
+            or just describe what you need below ↓
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── MAIN APP ────────────────────────────────────────────
+
+function App() {
+  const [messages, setMessages] = useState([
+    { id: "welcome", role: "assistant", content: GREETING, showCards: true, ts: Date.now() },
+  ]);
+  const [input, setInput] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  const [files, setFiles] = useState([]);
+  const [cardsActive, setCardsActive] = useState(true);
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
+  const [sessionId] = useState(() => "intake-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6));
+  const scrollRef = useRef(null);
+  const inputRef = useRef(null);
+  const fileRef = useRef(null);
+
+  useEffect(() => { scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" }); }, [messages, isTyping]);
+  useEffect(() => { inputRef.current?.focus(); }, []);
+
+  const sendMessage = useCallback(async (displayText, attached = [], apiText = null) => {
+    if (!displayText.trim() && !attached.length) return;
+    const userMsg = { id: uid(), role: "user", content: displayText, apiContent: apiText || displayText, files: attached.length ? attached : undefined, ts: Date.now() };
+    setMessages(prev => [...prev, userMsg]);
+    setInput(""); setFiles([]); setCardsActive(false); setIsTyping(true);
+
+    try {
+      const allMsgs = [...messages, userMsg];
+      const apiHistory = allMsgs.filter(m => !m.showCards).map(m => {
+        if (m.role === "assistant") return { role: "assistant", content: m.content };
+        const parts = [];
+        if (m.files?.length) {
+          m.files.forEach(f => {
+            if (f.type?.startsWith("image/")) parts.push({ type: "image", source: { type: "base64", media_type: f.type, data: f.base64 } });
+            else if (f.type === "application/pdf") parts.push({ type: "document", source: { type: "base64", media_type: f.type, data: f.base64 } });
+          });
+        }
+        parts.push({ type: "text", text: m.apiContent || m.content });
+        return { role: "user", content: parts.length === 1 && parts[0].type === "text" ? (m.apiContent || m.content) : parts };
+      });
+
+      if (MODE === "webhook") {
+        const res = await fetch(WEBHOOK_URL, { method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "sendMessage", chatInput: apiText || displayText, sessionId }) });
+        const data = await res.json();
+        const reply = typeof data === "string" ? data : data.output || data.text || JSON.stringify(data);
+        setMessages(p => [...p, { id: uid(), role: "assistant", content: reply, ts: Date.now() }]);
+      } else {
+        const res = await fetch("https://api.anthropic.com/v1/messages", { method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ model: MODEL, max_tokens: 1024, system: SYSTEM_PROMPT, messages: apiHistory }) });
+        const data = await res.json();
+        const reply = data.content?.map(c => c.text || "").join("") || "Sorry, I hit a snag. Could you try that again?";
+        setMessages(p => [...p, { id: uid(), role: "assistant", content: reply, ts: Date.now() }]);
+      }
+    } catch (err) {
+      console.error("Agent error:", err);
+      setMessages(p => [...p, { id: uid(), role: "assistant", content: "I ran into a connection issue — could you send that again?", ts: Date.now() }]);
+    } finally { setIsTyping(false); setTimeout(() => inputRef.current?.focus(), 100); }
+  }, [messages]);
+
+  const handleCardClick = useCallback((type) => {
+    const display = type.id === "help" ? "I'm not sure what type of request I need — can you help me figure it out?" : `I'd like to submit a ${type.label} request.`;
+    const api = type.id === "help" ? "[Selected: Not Sure] " + display : `[Selected: ${type.label}] ` + display;
+    setTimeout(() => sendMessage(display, [], api), 150);
+  }, [sendMessage]);
+
+  const handleQuickReply = useCallback((number, text) => {
+    // Send just the number as the API expects, but show a nicer display
+    const display = text;
+    const api = number;
+    setTimeout(() => sendMessage(display, [], api), 100);
+  }, [sendMessage]);
+
+  const handleSubmit = useCallback(async () => {
+    setSubmitting(true);
+    try {
+      // Find the summary message (last assistant message with 📋)
+      const summaryMsg = [...messages].reverse().find(m => m.role === "assistant" && m.content.includes("📋"));
+
+      // POST to n8n webhook for ClickUp task creation
+      const res = await fetch(WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "submit",
+          sessionId,
+          summary: summaryMsg?.content || "",
+          messages: messages.map(m => ({ role: m.role, content: m.content, ts: m.ts }))
+        })
+      });
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      setSubmitted(true);
+      setMessages(p => [...p, { id: uid(), role: "assistant",
+        content: "✅ **Request submitted!**\n\nIt's been logged with the DTI team. You'll get a confirmation email shortly.\n\nNeed to submit another? Just refresh to start a new conversation.", ts: Date.now() }]);
+    } catch (err) {
+      console.error("Submit error:", err);
+      setMessages(p => [...p, { id: uid(), role: "assistant", content: "Something went wrong submitting. Please try again.", ts: Date.now() }]);
+    }
+    finally { setSubmitting(false); }
+  }, [messages, sessionId]);
+
+  const processFiles = useCallback(async (fileList) => {
+    const added = [];
+    for (const file of fileList) {
+      if (file.size > 10 * 1048576) continue;
+      if (!file.type.startsWith("image/") && file.type !== "application/pdf") continue;
+      const base64 = await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result.split(",")[1]); r.onerror = rej; r.readAsDataURL(file); });
+      added.push({ name: file.name, size: file.size, type: file.type, base64,
+        preview: file.type.startsWith("image/") ? URL.createObjectURL(file) : null });
+    }
+    if (added.length) setFiles(p => [...p, ...added]);
+  }, []);
+
+  const handleInputChange = (e) => { setInput(e.target.value); e.target.style.height = "auto"; e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px"; };
+  const handleKeyDown = (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if ((input.trim() || files.length) && !isTyping) sendMessage(input, files); } };
+
+  const canSend = (input.trim() || files.length > 0) && !isTyping;
+  const lastMsg = messages[messages.length - 1];
+  const showSubmitBtn = lastMsg?.role === "assistant" && lastMsg.content.includes("📋") && !submitted && !submitting;
+
+  return (
+    <div style={{ height: "100vh", display: "flex", flexDirection: "column", background: "#F8F8F6", fontFamily: "'Sora', sans-serif" }}>
+
+      {/* HEADER */}
+      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 20px",
+        background: "white", borderBottom: "1px solid #E7E5E4", flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{ width: 36, height: 36, borderRadius: 11,
+            background: "linear-gradient(135deg, #14B8A6, #0F766E)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            color: "white", fontSize: 17, fontWeight: 700, boxShadow: "0 2px 8px rgba(13,148,136,0.25)" }}>✦</div>
+          <div>
+            <div style={{ fontWeight: 600, fontSize: 14.5, color: "#1C1917", letterSpacing: -0.3 }}>DTI Intake Agent</div>
+            <div style={{ fontSize: 11, color: "#78716C", letterSpacing: 0.1 }}>ACRRM Digital Technology &amp; Innovation</div>
+          </div>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <div style={{ width: 8, height: 8, borderRadius: "50%",
+            background: isTyping ? "#F59E0B" : "#10B981",
+            boxShadow: isTyping ? "0 0 6px rgba(245,158,11,0.4)" : "0 0 6px rgba(16,185,129,0.4)",
+            transition: "all 0.3s ease" }} />
+          <span style={{ fontSize: 12, color: "#78716C" }}>{isTyping ? "Typing…" : "Online"}</span>
+        </div>
+      </header>
+
+      {/* MESSAGES */}
+      <div ref={scrollRef} className="chat-scroll"
+        style={{ flex: 1, overflowY: "auto", padding: "28px 16px 16px", position: "relative" }}
+        onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+        onDragLeave={e => { e.preventDefault(); setDragOver(false); }}
+        onDrop={e => { e.preventDefault(); setDragOver(false); if (e.dataTransfer.files.length) processFiles(Array.from(e.dataTransfer.files)); }}>
+        <div style={{ maxWidth: 660, margin: "0 auto" }}>
+          {messages.map((m, idx) => (
+            <MessageBubble
+              key={m.id}
+              msg={m}
+              cardsActive={cardsActive}
+              onCardClick={handleCardClick}
+              onQuickReply={handleQuickReply}
+              isLatest={idx === messages.length - 1}
+              isTyping={isTyping}
+            />
+          ))}
+          {isTyping && <TypingDots />}
+        </div>
+        {dragOver && (
+          <div style={{ position: "absolute", inset: 0, background: "rgba(20,184,166,0.06)", border: "2.5px dashed rgba(13,148,136,0.4)",
+            borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 20,
+            animation: "dropPulse 1.5s ease infinite", pointerEvents: "none" }}>
+            <div style={{ padding: "14px 28px", borderRadius: 14, background: "white",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.08)", fontWeight: 600, color: "#0F766E", fontSize: 14 }}>📎 Drop files here</div>
+          </div>
+        )}
+      </div>
+
+      {/* SUBMIT BUTTON */}
+      {showSubmitBtn && (
+        <div style={{ padding: "0 16px 12px", animation: "slideUp 0.4s cubic-bezier(0.22,1,0.36,1)" }}>
+          <div style={{ maxWidth: 660, margin: "0 auto" }}>
+            <button className="submit-btn" onClick={handleSubmit} disabled={submitting}
+              style={{ width: "100%", padding: "15px 24px", borderRadius: 14, border: "none",
+                background: "linear-gradient(135deg, #0D9488 0%, #0F766E 50%, #115E59 100%)",
+                color: "white", fontFamily: "'Sora', sans-serif", fontWeight: 600, fontSize: 15, letterSpacing: -0.2,
+                cursor: submitting ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+                opacity: submitting ? 0.8 : 1 }}>
+              {submitting ? (<><div style={{ width: 18, height: 18, border: "2.5px solid rgba(255,255,255,0.3)",
+                borderTopColor: "white", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />Submitting…</>) : (<>Submit Request →</>)}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* SUBMITTED CONFIRMATION */}
+      {submitted && (
+        <div style={{ padding: "0 16px 12px", animation: "successPop 0.4s cubic-bezier(0.34,1.56,0.64,1)" }}>
+          <div style={{ maxWidth: 660, margin: "0 auto", padding: "12px 20px", borderRadius: 14,
+            background: "#ECFDF5", border: "1px solid #A7F3D0",
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+            fontWeight: 600, fontSize: 14, color: "#065F46" }}>✓ Request submitted</div>
+        </div>
+      )}
+
+      {/* FILE CHIPS */}
+      {files.length > 0 && (
+        <div style={{ padding: "8px 16px 0", borderTop: "1px solid #E7E5E4", background: "white" }}>
+          <div style={{ maxWidth: 660, margin: "0 auto", display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4 }}>
+            {files.map((f, i) => (
+              <div key={i} className="file-chip">
+                {f.preview ? (<img src={f.preview} alt="" style={{ width: 30, height: 30, borderRadius: 7, objectFit: "cover" }} />) :
+                  (<div style={{ width: 30, height: 30, borderRadius: 7, background: "#EEF2FF", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>📄</div>)}
+                <span style={{ color: "#44403C", maxWidth: 110, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.name}</span>
+                <span style={{ color: "#A8A29E", fontSize: 11 }}>{fmtSize(f.size)}</span>
+                <button className="file-chip-remove" onClick={() => setFiles(p => p.filter((_, j) => j !== i))} aria-label="Remove"><XIcon /></button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* INPUT BAR */}
+      <div style={{ background: "white", borderTop: files.length ? "none" : "1px solid #E7E5E4", padding: "12px 16px 14px", flexShrink: 0 }}>
+        <div style={{ maxWidth: 660, margin: "0 auto" }}>
+          <div className="input-ring" style={{ display: "flex", alignItems: "flex-end", gap: 8,
+            background: "#FAFAF9", border: "1.5px solid #E7E5E4", borderRadius: 22, padding: "6px 8px 6px 14px" }}>
+            <button className="attach-btn" onClick={() => fileRef.current?.click()} aria-label="Attach file"><ClipIcon /></button>
+            <textarea ref={inputRef} value={input} onChange={handleInputChange} onKeyDown={handleKeyDown}
+              placeholder={submitted ? "Refresh to start a new request" : "Type your message…"} disabled={submitted} rows={1}
+              style={{ flex: 1, border: "none", background: "transparent", fontSize: 14, lineHeight: 1.5,
+                color: "#1C1917", padding: "6px 0", maxHeight: 120, letterSpacing: -0.1 }} />
+            <button onClick={() => canSend && sendMessage(input, files)} disabled={!canSend || submitted}
+              style={{ width: 36, height: 36, borderRadius: "50%", border: "none",
+                background: canSend && !submitted ? "linear-gradient(135deg, #0D9488, #0F766E)" : "#E7E5E4",
+                color: canSend && !submitted ? "white" : "#A8A29E",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                cursor: canSend && !submitted ? "pointer" : "default", transition: "all 0.2s ease", flexShrink: 0 }}
+              aria-label="Send message"><SendIcon /></button>
+          </div>
+        </div>
+        <input type="file" ref={fileRef} hidden multiple accept="image/png,image/jpeg,image/gif,image/webp,application/pdf"
+          onChange={e => { if (e.target.files.length) processFiles(Array.from(e.target.files)); e.target.value = ""; }} />
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
 </body>
 </html>
