@@ -614,8 +614,16 @@ function App() {
       });
 
       if (MODE === "webhook") {
+        // Include file data in webhook request if files are attached
+        const fileData = attached.length > 0 ? attached.map(f => ({
+          name: f.name,
+          type: f.type,
+          size: f.size,
+          base64: f.base64
+        })) : undefined;
+
         const res = await fetch(WEBHOOK_URL, { method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "sendMessage", chatInput: apiText || displayText, sessionId }) });
+          body: JSON.stringify({ action: "sendMessage", chatInput: apiText || displayText, sessionId, files: fileData }) });
         const data = await res.json();
         const reply = typeof data === "string" ? data : data.output || data.text || JSON.stringify(data);
         setMessages(p => [...p, { id: uid(), role: "assistant", content: reply, ts: Date.now() }]);
