@@ -219,17 +219,30 @@ const fmtSize = (b) => {
 
 // Detect numbered options in AI responses (e.g., "1. BAU - Bug fix...")
 function extractQuickReplies(text) {
-  if (!text) return { options: [], cleanText: text };
+  if (!text) return { options: [], cleanText: text, isMultiSelect: false };
 
   const lines = text.split('\n');
   const options = [];
   const cleanLines = [];
   let foundOptions = false;
 
+  // Detect multi-select context from the text
+  const lowerText = text.toLowerCase();
+  const isMultiSelect = (
+    lowerText.includes('select all that apply') ||
+    lowerText.includes('choose all that apply') ||
+    lowerText.includes('select any that apply') ||
+    lowerText.includes('check all that apply') ||
+    lowerText.includes('multiple') ||
+    lowerText.includes('one or more') ||
+    lowerText.includes('any that apply') ||
+    lowerText.includes('all that apply')
+  );
+
   for (const line of lines) {
     // Match patterns like "1. Option text" or "1) Option text"
     const match = line.match(/^(\d+)[.\)]\s*(.+)$/);
-    if (match && parseInt(match[1]) <= 5) {
+    if (match && parseInt(match[1]) <= 10) {
       foundOptions = true;
       options.push({
         number: match[1],
@@ -244,11 +257,16 @@ function extractQuickReplies(text) {
   // Only return options if we found 2+ numbered items
   if (options.length >= 2) {
     // Remove trailing prompt like "Just reply with 1, 2, 3..."
-    const filtered = cleanLines.filter(l => !l.toLowerCase().includes('reply with') && !l.toLowerCase().includes('just type'));
-    return { options, cleanText: filtered.join('\n').trim() };
+    const filtered = cleanLines.filter(l =>
+      !l.toLowerCase().includes('reply with') &&
+      !l.toLowerCase().includes('just type') &&
+      !l.toLowerCase().includes('select all that apply') &&
+      !l.toLowerCase().includes('choose all that apply')
+    );
+    return { options, cleanText: filtered.join('\n').trim(), isMultiSelect };
   }
 
-  return { options: [], cleanText: text };
+  return { options: [], cleanText: text, isMultiSelect: false };
 }
 
 // Check if message is a summary (contains 📋)
@@ -340,32 +358,116 @@ function TypingDots() {
   );
 }
 
-function QuickReplyButtons({ options, onSelect, disabled }) {
+function QuickReplyButtons({ options, onSelect, onMultiSelect, disabled, isMultiSelect }) {
+  const [selected, setSelected] = useState([]);
+
   if (!options || options.length === 0) return null;
+
+  const handleToggle = (opt) => {
+    if (disabled) return;
+    setSelected(prev => {
+      if (prev.find(s => s.number === opt.number)) {
+        return prev.filter(s => s.number !== opt.number);
+      } else {
+        return [...prev, opt];
+      }
+    });
+  };
+
+  const handleConfirm = () => {
+    if (selected.length > 0 && onMultiSelect) {
+      const numbers = selected.map(s => s.number).join(', ');
+      const texts = selected.map(s => s.text).join(', ');
+      onMultiSelect(numbers, texts);
+      setSelected([]);
+    }
+  };
+
+  // Single-select mode (original behavior)
+  if (!isMultiSelect) {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 12, width: "100%", maxWidth: "88%" }}>
+        {options.map((opt, i) => (
+          <button
+            key={i}
+            className="quick-reply-btn"
+            onClick={() => !disabled && onSelect(opt.number, opt.text)}
+            disabled={disabled}
+            style={{
+              animation: `quickReplyIn 0.35s cubic-bezier(0.22,1,0.36,1) ${i * 80}ms both`,
+              opacity: disabled ? 0.6 : 1,
+              cursor: disabled ? "default" : "pointer"
+            }}
+          >
+            <span style={{
+              display: "inline-flex", alignItems: "center", justifyContent: "center",
+              width: 22, height: 22, borderRadius: "50%", marginRight: 10,
+              background: "linear-gradient(135deg, #0D9488, #0F766E)", color: "white",
+              fontSize: 12, fontWeight: 600
+            }}>{opt.number}</span>
+            {opt.text}
+          </button>
+        ))}
+      </div>
+    );
+  }
+
+  // Multi-select mode with checkboxes
+  const isSelected = (opt) => selected.find(s => s.number === opt.number);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 12, width: "100%", maxWidth: "88%" }}>
+      <div style={{ fontSize: 12, color: "#78716C", marginBottom: 4, fontStyle: "italic" }}>
+        ✓ Select all that apply, then click Confirm
+      </div>
       {options.map((opt, i) => (
         <button
           key={i}
           className="quick-reply-btn"
-          onClick={() => !disabled && onSelect(opt.number, opt.text)}
+          onClick={() => handleToggle(opt)}
           disabled={disabled}
           style={{
             animation: `quickReplyIn 0.35s cubic-bezier(0.22,1,0.36,1) ${i * 80}ms both`,
             opacity: disabled ? 0.6 : 1,
-            cursor: disabled ? "default" : "pointer"
+            cursor: disabled ? "default" : "pointer",
+            background: isSelected(opt) ? "#F0FDFA" : "white",
+            borderColor: isSelected(opt) ? "#14B8A6" : "#E7E5E4",
+            borderWidth: isSelected(opt) ? "2px" : "1.5px"
           }}
         >
           <span style={{
             display: "inline-flex", alignItems: "center", justifyContent: "center",
-            width: 22, height: 22, borderRadius: "50%", marginRight: 10,
-            background: "linear-gradient(135deg, #0D9488, #0F766E)", color: "white",
-            fontSize: 12, fontWeight: 600
-          }}>{opt.number}</span>
+            width: 22, height: 22, borderRadius: 6, marginRight: 10,
+            background: isSelected(opt) ? "linear-gradient(135deg, #0D9488, #0F766E)" : "#E7E5E4",
+            color: isSelected(opt) ? "white" : "#A8A29E",
+            fontSize: 14, fontWeight: 600,
+            transition: "all 0.2s ease"
+          }}>{isSelected(opt) ? "✓" : opt.number}</span>
           {opt.text}
         </button>
       ))}
+      {selected.length > 0 && (
+        <button
+          onClick={handleConfirm}
+          disabled={disabled}
+          style={{
+            marginTop: 8,
+            padding: "12px 20px",
+            borderRadius: 12,
+            border: "none",
+            background: "linear-gradient(135deg, #0D9488 0%, #0F766E 100%)",
+            color: "white",
+            fontFamily: "'Sora', sans-serif",
+            fontWeight: 600,
+            fontSize: 14,
+            cursor: disabled ? "default" : "pointer",
+            animation: "fadeIn 0.2s ease",
+            boxShadow: "0 4px 12px rgba(13,148,136,0.25)"
+          }}
+        >
+          Confirm Selection ({selected.length})
+        </button>
+      )}
     </div>
   );
 }
@@ -402,10 +504,10 @@ function SummaryCard({ text }) {
   );
 }
 
-function MessageBubble({ msg, cardsActive, onCardClick, onQuickReply, isLatest, isTyping }) {
+function MessageBubble({ msg, cardsActive, onCardClick, onQuickReply, onMultiSelect, isLatest, isTyping }) {
   const isUser = msg.role === "user";
   const isSummary = !isUser && isSummaryMessage(msg.content);
-  const { options, cleanText } = !isUser && !isSummary ? extractQuickReplies(msg.content) : { options: [], cleanText: msg.content };
+  const { options, cleanText, isMultiSelect } = !isUser && !isSummary ? extractQuickReplies(msg.content) : { options: [], cleanText: msg.content, isMultiSelect: false };
   const showQuickReplies = isLatest && !isTyping && options.length > 0;
 
   return (
@@ -441,7 +543,13 @@ function MessageBubble({ msg, cardsActive, onCardClick, onQuickReply, isLatest, 
 
       {/* Quick Reply Buttons */}
       {showQuickReplies && (
-        <QuickReplyButtons options={options} onSelect={onQuickReply} disabled={isTyping} />
+        <QuickReplyButtons
+          options={options}
+          onSelect={onQuickReply}
+          onMultiSelect={onMultiSelect}
+          disabled={isTyping}
+          isMultiSelect={isMultiSelect}
+        />
       )}
 
       {/* Type Selection Cards */}
@@ -534,6 +642,13 @@ function App() {
     setTimeout(() => sendMessage(display, [], api), 100);
   }, [sendMessage]);
 
+  const handleMultiSelect = useCallback((numbers, texts) => {
+    // For multi-select, send selected numbers as comma-separated, display selected texts
+    const display = texts;
+    const api = numbers;
+    setTimeout(() => sendMessage(display, [], api), 100);
+  }, [sendMessage]);
+
   const handleSubmit = useCallback(async () => {
     setSubmitting(true);
     try {
@@ -622,6 +737,7 @@ function App() {
               cardsActive={cardsActive}
               onCardClick={handleCardClick}
               onQuickReply={handleQuickReply}
+              onMultiSelect={handleMultiSelect}
               isLatest={idx === messages.length - 1}
               isTyping={isTyping}
             />
