@@ -28,7 +28,7 @@
     40% { opacity: 1; transform: scale(1); }
   }
   @keyframes slideUp {
-    from { opacity: 0; transform: translateY(12px); }
+if (match && parseInt(match[1]) <= 10) {    from { opacity: 0; transform: translateY(12px); }
     to   { opacity: 1; transform: translateY(0); }
   }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -240,19 +240,23 @@ function extractQuickReplies(text) {
   );
 
   for (const line of lines) {
-    // Match patterns like "1. Option text" or "1) Option text"
-    const match = line.match(/^(\d+)[.\)]\s*(.+)$/);
-    if (match && parseInt(match[1]) <= 10) {
-      foundOptions = true;
-      options.push({
-        number: match[1],
-        text: match[2].trim(),
-        full: line.trim()
-      });
-    } else {
-      cleanLines.push(line);
+      // Match patterns like "1. Option text" or "1) Option text"
+      const match = line.match(/^(\d+)[.\)]\s*(.+)$/);
+
+      // Skip lines that are questions (contain ?) or bold labels (contain **)
+      const isQuestion = line.includes('?') || line.includes('**');
+
+      if (match && parseInt(match[1]) <= 10 && !isQuestion) {
+        foundOptions = true;
+        options.push({
+          number: match[1],
+          text: match[2].trim(),
+          full: line.trim()
+        });
+      } else {
+        cleanLines.push(line);
+      }
     }
-  }
 
   // Only return options if we found 2+ numbered items
   if (options.length >= 2) {
