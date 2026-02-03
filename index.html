@@ -7,132 +7,132 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body, #root { height: 100%; }
-  body { font-family: 'Sora', sans-serif; background: #F8F8F6; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, #root { height: 100%; }
+body { font-family: 'Sora', sans-serif; background: #F8F8F6; }
 
-  @keyframes msgLeft {
-    from { opacity: 0; transform: translateY(8px) translateX(-8px); }
-    to   { opacity: 1; transform: translateY(0) translateX(0); }
-  }
-  @keyframes msgRight {
-    from { opacity: 0; transform: translateY(8px) translateX(8px); }
-    to   { opacity: 1; transform: translateY(0) translateX(0); }
-  }
-  @keyframes cardIn {
-    from { opacity: 0; transform: translateY(10px) scale(0.97); }
-    to   { opacity: 1; transform: translateY(0) scale(1); }
-  }
-  @keyframes dotPulse {
-    0%, 80%, 100% { opacity: 0.25; transform: scale(0.75); }
-    40% { opacity: 1; transform: scale(1); }
-  }
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @keyframes dropPulse {
-    0%, 100% { border-color: rgba(13,148,136,0.3); }
-    50% { border-color: rgba(13,148,136,0.7); }
-  }
-  @keyframes successPop {
-    0% { transform: scale(0.8); opacity: 0; }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); opacity: 1; }
-  }
+@keyframes msgLeft {
+  from { opacity: 0; transform: translateY(8px) translateX(-8px); }
+  to   { opacity: 1; transform: translateY(0) translateX(0); }
+}
+@keyframes msgRight {
+  from { opacity: 0; transform: translateY(8px) translateX(8px); }
+  to   { opacity: 1; transform: translateY(0) translateX(0); }
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes dotPulse {
+  0%, 80%, 100% { opacity: 0.25; transform: scale(0.75); }
+  40% { opacity: 1; transform: scale(1); }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes dropPulse {
+  0%, 100% { border-color: rgba(13,148,136,0.3); }
+  50% { border-color: rgba(13,148,136,0.7); }
+}
+@keyframes successPop {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
 
-  .chat-scroll::-webkit-scrollbar { width: 5px; }
-  .chat-scroll::-webkit-scrollbar-track { background: transparent; }
-  .chat-scroll::-webkit-scrollbar-thumb { background: #D6D3D1; border-radius: 10px; }
-  .chat-scroll::-webkit-scrollbar-thumb:hover { background: #A8A29E; }
+.chat-scroll::-webkit-scrollbar { width: 5px; }
+.chat-scroll::-webkit-scrollbar-track { background: transparent; }
+.chat-scroll::-webkit-scrollbar-thumb { background: #D6D3D1; border-radius: 10px; }
+.chat-scroll::-webkit-scrollbar-thumb:hover { background: #A8A29E; }
 
-  .type-card {
-    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    position: relative; overflow: hidden;
-    background: white; text-align: left; width: 100%; cursor: pointer;
-    border-radius: 14px; padding: 14px 16px;
-  }
-  .type-card::after {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(135deg, transparent 60%, rgba(0,0,0,0.02));
-    pointer-events: none;
-  }
-  .type-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px -8px rgba(0,0,0,0.12); }
-  .type-card:active { transform: translateY(-1px); }
+.type-card {
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative; overflow: hidden;
+  background: white; text-align: left; width: 100%; cursor: pointer;
+  border-radius: 14px; padding: 14px 16px;
+}
+.type-card::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, transparent 60%, rgba(0,0,0,0.02));
+  pointer-events: none;
+}
+.type-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px -8px rgba(0,0,0,0.12); }
+.type-card:active { transform: translateY(-1px); }
 
-  .quick-reply-btn {
-    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    background: white; border: 1.5px solid #E7E5E4; border-radius: 12px;
-    padding: 10px 16px; font-family: 'Sora', sans-serif; font-size: 13px;
-    color: #44403C; cursor: pointer; text-align: left;
-  }
-  .quick-reply-btn:hover {
-    border-color: #14B8A6; background: #F0FDFA; color: #0F766E;
-    transform: translateY(-2px); box-shadow: 0 4px 12px rgba(13,148,136,0.15);
-  }
-  .quick-reply-btn:active { transform: translateY(0); }
+.quick-reply-btn {
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  background: white; border: 1.5px solid #E7E5E4; border-radius: 12px;
+  padding: 10px 16px; font-family: 'Sora', sans-serif; font-size: 13px;
+  color: #44403C; cursor: pointer; text-align: left;
+}
+.quick-reply-btn:hover {
+  border-color: #14B8A6; background: #F0FDFA; color: #0F766E;
+  transform: translateY(-2px); box-shadow: 0 4px 12px rgba(13,148,136,0.15);
+}
+.quick-reply-btn:active { transform: translateY(0); }
 
-  .summary-card {
-    background: linear-gradient(135deg, #FAFAF9 0%, #F5F5F4 100%);
-    border: 1.5px solid #E7E5E4; border-left: 4px solid #0D9488;
-    border-radius: 16px; padding: 20px; margin-top: 4px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-  }
-  .summary-card-header {
-    display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
-    padding-bottom: 12px; border-bottom: 1px solid #E7E5E4;
-  }
-  .summary-card-title {
-    font-weight: 600; font-size: 15px; color: #1C1917; letter-spacing: -0.3px;
-  }
-  .summary-card-badge {
-    background: linear-gradient(135deg, #0D9488, #0F766E); color: white;
-    font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px;
-    letter-spacing: 0.3px;
-  }
-  .summary-field { margin-bottom: 10px; }
-  .summary-field-label { font-size: 11px; color: #78716C; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
-  .summary-field-value { font-size: 14px; color: #1C1917; line-height: 1.5; }
+.summary-card {
+  background: linear-gradient(135deg, #FAFAF9 0%, #F5F5F4 100%);
+  border: 1.5px solid #E7E5E4; border-left: 4px solid #0D9488;
+  border-radius: 16px; padding: 20px; margin-top: 4px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+.summary-card-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #E7E5E4;
+}
+.summary-card-title { font-weight: 600; font-size: 15px; color: #1C1917; letter-spacing: -0.3px; }
+.summary-card-badge {
+  background: linear-gradient(135deg, #0D9488, #0F766E);
+  color: white; font-size: 11px; font-weight: 600;
+  padding: 4px 10px; border-radius: 20px; letter-spacing: 0.3px;
+}
+.summary-field { margin-bottom: 10px; }
+.summary-field-label { font-size: 11px; color: #78716C; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+.summary-field-value { font-size: 14px; color: #1C1917; line-height: 1.5; }
 
-  @keyframes quickReplyIn {
-    from { opacity: 0; transform: translateY(8px) scale(0.95); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-  }
+@keyframes quickReplyIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
 
-  .input-ring { transition: border-color 0.2s, box-shadow 0.2s; }
-  .input-ring:focus-within {
-    border-color: #14B8A6 !important;
-    box-shadow: 0 0 0 3px rgba(20,184,166,0.1);
-  }
+.input-ring { transition: border-color 0.2s, box-shadow 0.2s; }
+.input-ring:focus-within { border-color: #14B8A6 !important; box-shadow: 0 0 0 3px rgba(20,184,166,0.1); }
 
-  textarea { font-family: 'Sora', sans-serif; resize: none; }
-  textarea:focus, button:focus { outline: none; }
-  button:focus-visible { outline: 2px solid #14B8A6; outline-offset: 2px; }
+textarea { font-family: 'Sora', sans-serif; resize: none; }
+textarea:focus, button:focus { outline: none; }
+button:focus-visible { outline: 2px solid #14B8A6; outline-offset: 2px; }
 
-  .submit-btn {
-    transition: all 0.25s ease; position: relative; overflow: hidden;
-  }
-  .submit-btn:not(:disabled):hover {
-    box-shadow: 0 8px 24px -6px rgba(13,148,136,0.4); transform: translateY(-1px);
-  }
-  .submit-btn:not(:disabled):active { transform: translateY(0); }
-  .submit-btn::before {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%);
-    pointer-events: none;
-  }
+.submit-btn {
+  transition: all 0.25s ease; position: relative; overflow: hidden;
+}
+.submit-btn:not(:disabled):hover { box-shadow: 0 8px 24px -6px rgba(13,148,136,0.4); transform: translateY(-1px); }
+.submit-btn:not(:disabled):active { transform: translateY(0); }
+.submit-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
 
-  .file-chip { display: flex; align-items: center; gap: 8px; padding: 5px 10px 5px 5px;
-    background: #F5F5F4; border: 1px solid #E7E5E4; border-radius: 10px; font-size: 12px; flex-shrink: 0; }
-  .file-chip-remove { background: none; border: none; cursor: pointer; padding: 2px;
-    color: #A8A29E; display: flex; line-height: 0; transition: color 0.15s; }
-  .file-chip-remove:hover { color: #EF4444; }
+.file-chip {
+  display: flex; align-items: center; gap: 8px;
+  padding: 5px 10px 5px 5px; background: #F5F5F4;
+  border: 1px solid #E7E5E4; border-radius: 10px; font-size: 12px; flex-shrink: 0;
+}
+.file-chip-remove {
+  background: none; border: none; cursor: pointer; padding: 2px;
+  color: #A8A29E; display: flex; line-height: 0; transition: color 0.15s;
+}
+.file-chip-remove:hover { color: #EF4444; }
 
-  .attach-btn { background: none; border: none; cursor: pointer; color: #A8A29E;
-    padding: 6px 2px; display: flex; align-items: center; transition: color 0.2s; flex-shrink: 0; }
-  .attach-btn:hover { color: #0D9488; }
+.attach-btn {
+  background: none; border: none; cursor: pointer; color: #A8A29E;
+  padding: 6px 2px; display: flex; align-items: center; transition: color 0.2s; flex-shrink: 0;
+}
+.attach-btn:hover { color: #0D9488; }
 </style>
 </head>
 <body>
@@ -146,11 +146,25 @@
 const { useState, useRef, useEffect, useCallback } = React;
 
 // ═══════════════════════════════════════════════════════════
-//  CONFIG — Change these for production
+// CONFIG — Change these for production
 // ═══════════════════════════════════════════════════════════
-const MODE = "webhook";   // "claude" for demo | "webhook" for n8n production
+const MODE = "webhook";  // "claude" for demo | "webhook" for n8n production
 const WEBHOOK_URL = "https://temba.app.n8n.cloud/webhook/157b0d15-cc29-4a88-bdaf-826fc492b547/chat";
 const MODEL = "claude-sonnet-4-20250514";
+
+// Supported file types for upload
+const SUPPORTED_FILE_TYPES = [
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/vnd.ms-powerpoint",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  "text/plain",
+  "text/csv",
+  "application/rtf"
+];
 
 // ─── REQUEST TYPES ───────────────────────────────────────
 const TYPES = [
@@ -217,16 +231,21 @@ const fmtSize = (b) => {
   return (b / 1048576).toFixed(1) + " MB";
 };
 
-// Detect numbered options in AI responses (e.g., "1. BAU - Bug fix...")
+// Check if file type is supported
+const isFileTypeSupported = (type) => {
+  if (type.startsWith("image/")) return true;
+  if (type.startsWith("text/")) return true;
+  return SUPPORTED_FILE_TYPES.includes(type);
+};
+
+// Detect numbered options in AI responses
 function extractQuickReplies(text) {
   if (!text) return { options: [], cleanText: text, isMultiSelect: false };
-
   const lines = text.split('\n');
   const options = [];
   const cleanLines = [];
   let foundOptions = false;
 
-  // Detect multi-select context from the text
   const lowerText = text.toLowerCase();
   const isMultiSelect = (
     lowerText.includes('select all that apply') ||
@@ -240,27 +259,17 @@ function extractQuickReplies(text) {
   );
 
   for (const line of lines) {
-      // Match patterns like "1. Option text" or "1) Option text"
-      const match = line.match(/^(\d+)[.\)]\s*(.+)$/);
-
-      // Skip lines that are questions (contain ?) or bold labels (contain **)
-      const isQuestion = line.includes('?') || line.includes('**');
-
-      if (match && parseInt(match[1]) <= 10 && !isQuestion) {
-        foundOptions = true;
-        options.push({
-          number: match[1],
-          text: match[2].trim(),
-          full: line.trim()
-        });
-      } else {
-        cleanLines.push(line);
-      }
+    const match = line.match(/^(\d+)[.\)]\s*(.+)$/);
+    const isQuestion = line.includes('?') || line.includes('**');
+    if (match && parseInt(match[1]) <= 10 && !isQuestion) {
+      foundOptions = true;
+      options.push({ number: match[1], text: match[2].trim(), full: line.trim() });
+    } else {
+      cleanLines.push(line);
     }
+  }
 
-  // Only return options if we found 2+ numbered items
   if (options.length >= 2) {
-    // Remove trailing prompt like "Just reply with 1, 2, 3..."
     const filtered = cleanLines.filter(l =>
       !l.toLowerCase().includes('reply with') &&
       !l.toLowerCase().includes('just type') &&
@@ -269,34 +278,25 @@ function extractQuickReplies(text) {
     );
     return { options, cleanText: filtered.join('\n').trim(), isMultiSelect };
   }
-
   return { options: [], cleanText: text, isMultiSelect: false };
 }
 
-// Check if message is a summary (contains 📋)
 function isSummaryMessage(text) {
   return text && text.includes('📋');
 }
 
-// Parse summary into structured fields
 function parseSummary(text) {
   if (!text) return null;
-
   const fields = [];
   const lines = text.split('\n');
-
   for (const line of lines) {
-    // Match **Label:** Value patterns
     const match = line.match(/\*\*([^*]+):\*\*\s*(.+)/);
     if (match) {
       fields.push({ label: match[1].trim(), value: match[2].trim() });
     }
   }
-
-  // Extract the confirmation text (after ---)
   const afterDivider = text.split('---')[1];
   const confirmText = afterDivider ? afterDivider.trim() : '';
-
   return { fields, confirmText };
 }
 
@@ -306,9 +306,17 @@ function parseMd(text) {
   const out = [];
   let k = 0;
   for (const raw of lines) {
-    if (raw.trim() === "---") { out.push(<hr key={k++} style={{ border: "none", borderTop: "1px solid #E7E5E4", margin: "10px 0" }} />); continue; }
-    if (raw.trim() === "") { out.push(<div key={k++} style={{ height: 6 }} />); continue; }
-    const segs = []; let rest = raw; let s = 0;
+    if (raw.trim() === "---") {
+      out.push(<hr key={k++} style={{ border: "none", borderTop: "1px solid #E7E5E4", margin: "10px 0" }} />);
+      continue;
+    }
+    if (raw.trim() === "") {
+      out.push(<div key={k++} style={{ height: 6 }} />);
+      continue;
+    }
+    const segs = [];
+    let rest = raw;
+    let s = 0;
     while (rest.includes("**")) {
       const a = rest.indexOf("**");
       if (a > 0) segs.push(<span key={s++}>{rest.slice(0, a)}</span>);
@@ -321,7 +329,9 @@ function parseMd(text) {
     if (rest) segs.push(<span key={s++}>{rest}</span>);
     if (raw.trim().startsWith("- ")) {
       out.push(<div key={k++} style={{ display: "flex", gap: 8, paddingLeft: 2 }}><span style={{ color: "#A8A29E", flexShrink: 0 }}>•</span><span>{segs}</span></div>);
-    } else { out.push(<div key={k++}>{segs}</div>); }
+    } else {
+      out.push(<div key={k++}>{segs}</div>);
+    }
   }
   return out;
 }
@@ -332,13 +342,11 @@ const ClipIcon = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="no
 const XIcon = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>);
 
 // ─── SUB-COMPONENTS ──────────────────────────────────────
-
 function TypeCard({ type, onClick, delay }) {
   return (
-    <button className="type-card"
-      onClick={() => onClick(type)}
+    <button className="type-card" onClick={() => onClick(type)}
       style={{ border: `1.5px solid ${type.accentBorder}`, borderLeft: `4px solid ${type.accent}`,
-        animation: `cardIn 0.45s cubic-bezier(0.22,1,0.36,1) ${delay}ms both` }}>
+               animation: `cardIn 0.45s cubic-bezier(0.22,1,0.36,1) ${delay}ms both` }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
         <span style={{ fontSize: 17, lineHeight: 1 }}>{type.emoji}</span>
         <span style={{ fontWeight: 600, fontSize: 13.5, color: "#1C1917", letterSpacing: -0.2 }}>{type.title}</span>
@@ -352,10 +360,11 @@ function TypingDots() {
   return (
     <div style={{ display: "flex", alignItems: "flex-start", marginBottom: 18, animation: "fadeIn 0.25s ease" }}>
       <div style={{ padding: "16px 20px", borderRadius: "20px 20px 20px 6px", background: "white",
-        border: "1px solid #E7E5E4", boxShadow: "0 1px 4px rgba(0,0,0,0.03)", display: "flex", gap: 5, alignItems: "center" }}>
+                    border: "1px solid #E7E5E4", boxShadow: "0 1px 4px rgba(0,0,0,0.03)",
+                    display: "flex", gap: 5, alignItems: "center" }}>
         {[0, 1, 2].map((i) => (
           <div key={i} style={{ width: 7, height: 7, borderRadius: "50%", background: "#A8A29E",
-            animation: `dotPulse 1.4s ease-in-out infinite`, animationDelay: `${i * 0.2}s` }} />
+                                animation: `dotPulse 1.4s ease-in-out infinite`, animationDelay: `${i * 0.2}s` }} />
         ))}
       </div>
     </div>
@@ -364,7 +373,6 @@ function TypingDots() {
 
 function QuickReplyButtons({ options, onSelect, onMultiSelect, disabled, isMultiSelect }) {
   const [selected, setSelected] = useState([]);
-
   if (!options || options.length === 0) return null;
 
   const handleToggle = (opt) => {
@@ -387,28 +395,18 @@ function QuickReplyButtons({ options, onSelect, onMultiSelect, disabled, isMulti
     }
   };
 
-  // Single-select mode (original behavior)
   if (!isMultiSelect) {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 12, width: "100%", maxWidth: "88%" }}>
         {options.map((opt, i) => (
-          <button
-            key={i}
-            className="quick-reply-btn"
-            onClick={() => !disabled && onSelect(opt.number, opt.text)}
+          <button key={i} className="quick-reply-btn" onClick={() => !disabled && onSelect(opt.number, opt.text)}
             disabled={disabled}
-            style={{
-              animation: `quickReplyIn 0.35s cubic-bezier(0.22,1,0.36,1) ${i * 80}ms both`,
-              opacity: disabled ? 0.6 : 1,
-              cursor: disabled ? "default" : "pointer"
-            }}
-          >
-            <span style={{
-              display: "inline-flex", alignItems: "center", justifyContent: "center",
-              width: 22, height: 22, borderRadius: "50%", marginRight: 10,
-              background: "linear-gradient(135deg, #0D9488, #0F766E)", color: "white",
-              fontSize: 12, fontWeight: 600
-            }}>{opt.number}</span>
+            style={{ animation: `quickReplyIn 0.35s cubic-bezier(0.22,1,0.36,1) ${i * 80}ms both`,
+                     opacity: disabled ? 0.6 : 1, cursor: disabled ? "default" : "pointer" }}>
+            <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center",
+                           width: 22, height: 22, borderRadius: "50%", marginRight: 10,
+                           background: "linear-gradient(135deg, #0D9488, #0F766E)", color: "white",
+                           fontSize: 12, fontWeight: 600 }}>{opt.number}</span>
             {opt.text}
           </button>
         ))}
@@ -416,7 +414,6 @@ function QuickReplyButtons({ options, onSelect, onMultiSelect, disabled, isMulti
     );
   }
 
-  // Multi-select mode with checkboxes
   const isSelected = (opt) => selected.find(s => s.number === opt.number);
 
   return (
@@ -425,50 +422,29 @@ function QuickReplyButtons({ options, onSelect, onMultiSelect, disabled, isMulti
         ✓ Select all that apply, then click Confirm
       </div>
       {options.map((opt, i) => (
-        <button
-          key={i}
-          className="quick-reply-btn"
-          onClick={() => handleToggle(opt)}
-          disabled={disabled}
-          style={{
-            animation: `quickReplyIn 0.35s cubic-bezier(0.22,1,0.36,1) ${i * 80}ms both`,
-            opacity: disabled ? 0.6 : 1,
-            cursor: disabled ? "default" : "pointer",
-            background: isSelected(opt) ? "#F0FDFA" : "white",
-            borderColor: isSelected(opt) ? "#14B8A6" : "#E7E5E4",
-            borderWidth: isSelected(opt) ? "2px" : "1.5px"
-          }}
-        >
-          <span style={{
-            display: "inline-flex", alignItems: "center", justifyContent: "center",
-            width: 22, height: 22, borderRadius: 6, marginRight: 10,
-            background: isSelected(opt) ? "linear-gradient(135deg, #0D9488, #0F766E)" : "#E7E5E4",
-            color: isSelected(opt) ? "white" : "#A8A29E",
-            fontSize: 14, fontWeight: 600,
-            transition: "all 0.2s ease"
-          }}>{isSelected(opt) ? "✓" : opt.number}</span>
+        <button key={i} className="quick-reply-btn" onClick={() => handleToggle(opt)} disabled={disabled}
+          style={{ animation: `quickReplyIn 0.35s cubic-bezier(0.22,1,0.36,1) ${i * 80}ms both`,
+                   opacity: disabled ? 0.6 : 1, cursor: disabled ? "default" : "pointer",
+                   background: isSelected(opt) ? "#F0FDFA" : "white",
+                   borderColor: isSelected(opt) ? "#14B8A6" : "#E7E5E4",
+                   borderWidth: isSelected(opt) ? "2px" : "1.5px" }}>
+          <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center",
+                         width: 22, height: 22, borderRadius: 6, marginRight: 10,
+                         background: isSelected(opt) ? "linear-gradient(135deg, #0D9488, #0F766E)" : "#E7E5E4",
+                         color: isSelected(opt) ? "white" : "#A8A29E",
+                         fontSize: 14, fontWeight: 600, transition: "all 0.2s ease" }}>
+            {isSelected(opt) ? "✓" : opt.number}
+          </span>
           {opt.text}
         </button>
       ))}
       {selected.length > 0 && (
-        <button
-          onClick={handleConfirm}
-          disabled={disabled}
-          style={{
-            marginTop: 8,
-            padding: "12px 20px",
-            borderRadius: 12,
-            border: "none",
-            background: "linear-gradient(135deg, #0D9488 0%, #0F766E 100%)",
-            color: "white",
-            fontFamily: "'Sora', sans-serif",
-            fontWeight: 600,
-            fontSize: 14,
-            cursor: disabled ? "default" : "pointer",
-            animation: "fadeIn 0.2s ease",
-            boxShadow: "0 4px 12px rgba(13,148,136,0.25)"
-          }}
-        >
+        <button onClick={handleConfirm} disabled={disabled}
+          style={{ marginTop: 8, padding: "12px 20px", borderRadius: 12, border: "none",
+                   background: "linear-gradient(135deg, #0D9488 0%, #0F766E 100%)", color: "white",
+                   fontFamily: "'Sora', sans-serif", fontWeight: 600, fontSize: 14,
+                   cursor: disabled ? "default" : "pointer", animation: "fadeIn 0.2s ease",
+                   boxShadow: "0 4px 12px rgba(13,148,136,0.25)" }}>
           Confirm Selection ({selected.length})
         </button>
       )}
@@ -479,8 +455,6 @@ function QuickReplyButtons({ options, onSelect, onMultiSelect, disabled, isMulti
 function SummaryCard({ text }) {
   const parsed = parseSummary(text);
   if (!parsed || parsed.fields.length === 0) return null;
-
-  // Find the type for badge styling
   const typeField = parsed.fields.find(f => f.label.toLowerCase() === 'type');
   const typeValue = typeField?.value || 'Request';
 
@@ -500,7 +474,8 @@ function SummaryCard({ text }) {
         ))}
       </div>
       {parsed.confirmText && (
-        <div style={{ marginTop: 16, paddingTop: 12, borderTop: "1px solid #E7E5E4", fontSize: 13, color: "#57534E", lineHeight: 1.5 }}>
+        <div style={{ marginTop: 16, paddingTop: 12, borderTop: "1px solid #E7E5E4",
+                      fontSize: 13, color: "#57534E", lineHeight: 1.5 }}>
           {parsed.confirmText}
         </div>
       )}
@@ -511,52 +486,50 @@ function SummaryCard({ text }) {
 function MessageBubble({ msg, cardsActive, onCardClick, onQuickReply, onMultiSelect, isLatest, isTyping }) {
   const isUser = msg.role === "user";
   const isSummary = !isUser && isSummaryMessage(msg.content);
-  const { options, cleanText, isMultiSelect } = !isUser && !isSummary ? extractQuickReplies(msg.content) : { options: [], cleanText: msg.content, isMultiSelect: false };
+  const { options, cleanText, isMultiSelect } = !isUser && !isSummary
+    ? extractQuickReplies(msg.content)
+    : { options: [], cleanText: msg.content, isMultiSelect: false };
   const showQuickReplies = isLatest && !isTyping && options.length > 0;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: isUser ? "flex-end" : "flex-start",
-      marginBottom: 18, animation: `${isUser ? "msgRight" : "msgLeft"} 0.35s cubic-bezier(0.22,1,0.36,1)` }}>
+                  marginBottom: 18, animation: `${isUser ? "msgRight" : "msgLeft"} 0.35s cubic-bezier(0.22,1,0.36,1)` }}>
       {msg.files?.length > 0 && (
-        <div style={{ display: "flex", gap: 8, marginBottom: 8, flexWrap: "wrap", justifyContent: isUser ? "flex-end" : "flex-start" }}>
+        <div style={{ display: "flex", gap: 8, marginBottom: 8, flexWrap: "wrap",
+                      justifyContent: isUser ? "flex-end" : "flex-start" }}>
           {msg.files.map((f, i) =>
             f.type?.startsWith("image/") ? (
-              <img key={i} src={f.preview} alt={f.name} style={{ maxWidth: 180, maxHeight: 140, borderRadius: 14, objectFit: "cover", border: "1px solid #E7E5E4" }} />
+              <img key={i} src={f.preview} alt={f.name}
+                style={{ maxWidth: 180, maxHeight: 140, borderRadius: 14, objectFit: "cover", border: "1px solid #E7E5E4" }} />
             ) : (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, background: isUser ? "rgba(255,255,255,0.15)" : "#F5F5F4",
-                borderRadius: 10, padding: "8px 12px", fontSize: 12, color: isUser ? "white" : "#44403C" }}>📄 {f.name}</div>
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 6,
+                                    background: isUser ? "rgba(255,255,255,0.15)" : "#F5F5F4",
+                                    borderRadius: 10, padding: "8px 12px", fontSize: 12,
+                                    color: isUser ? "white" : "#44403C" }}>📄 {f.name}</div>
             )
           )}
         </div>
       )}
 
-      {/* Summary Card for 📋 messages */}
       {isSummary ? (
         <SummaryCard text={msg.content} />
       ) : (
         <div style={{ maxWidth: "88%", padding: "14px 18px",
-          borderRadius: isUser ? "20px 20px 6px 20px" : "20px 20px 20px 6px",
-          background: isUser ? "linear-gradient(135deg, #0D9488 0%, #0F766E 100%)" : "white",
-          color: isUser ? "white" : "#292524",
-          border: isUser ? "none" : "1px solid #E7E5E4",
-          boxShadow: isUser ? "0 2px 12px rgba(13,148,136,0.2)" : "0 1px 4px rgba(0,0,0,0.03)",
-          fontSize: 14, lineHeight: 1.65, letterSpacing: -0.1 }}>
+                      borderRadius: isUser ? "20px 20px 6px 20px" : "20px 20px 20px 6px",
+                      background: isUser ? "linear-gradient(135deg, #0D9488 0%, #0F766E 100%)" : "white",
+                      color: isUser ? "white" : "#292524",
+                      border: isUser ? "none" : "1px solid #E7E5E4",
+                      boxShadow: isUser ? "0 2px 12px rgba(13,148,136,0.2)" : "0 1px 4px rgba(0,0,0,0.03)",
+                      fontSize: 14, lineHeight: 1.65, letterSpacing: -0.1 }}>
           {parseMd(showQuickReplies ? cleanText : msg.content)}
         </div>
       )}
 
-      {/* Quick Reply Buttons */}
       {showQuickReplies && (
-        <QuickReplyButtons
-          options={options}
-          onSelect={onQuickReply}
-          onMultiSelect={onMultiSelect}
-          disabled={isTyping}
-          isMultiSelect={isMultiSelect}
-        />
+        <QuickReplyButtons options={options} onSelect={onQuickReply} onMultiSelect={onMultiSelect}
+          disabled={isTyping} isMultiSelect={isMultiSelect} />
       )}
 
-      {/* Type Selection Cards */}
       {msg.showCards && cardsActive && (
         <div style={{ width: "100%", maxWidth: "88%", marginTop: 14 }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
@@ -572,7 +545,6 @@ function MessageBubble({ msg, cardsActive, onCardClick, onQuickReply, onMultiSel
 }
 
 // ─── MAIN APP ────────────────────────────────────────────
-
 function App() {
   const [messages, setMessages] = useState([
     { id: "welcome", role: "assistant", content: GREETING, showCards: true, ts: Date.now() },
@@ -594,7 +566,8 @@ function App() {
 
   const sendMessage = useCallback(async (displayText, attached = [], apiText = null) => {
     if (!displayText.trim() && !attached.length) return;
-    const userMsg = { id: uid(), role: "user", content: displayText, apiContent: apiText || displayText, files: attached.length ? attached : undefined, ts: Date.now() };
+    const userMsg = { id: uid(), role: "user", content: displayText, apiContent: apiText || displayText,
+                      files: attached.length ? attached : undefined, ts: Date.now() };
     setMessages(prev => [...prev, userMsg]);
     setInput(""); setFiles([]); setCardsActive(false); setIsTyping(true);
 
@@ -614,7 +587,6 @@ function App() {
       });
 
       if (MODE === "webhook") {
-        // Include file data in webhook request if files are attached
         const fileData = attached.length > 0 ? attached.map(f => ({
           name: f.name,
           type: f.type,
@@ -648,14 +620,12 @@ function App() {
   }, [sendMessage]);
 
   const handleQuickReply = useCallback((number, text) => {
-    // Send just the number as the API expects, but show a nicer display
     const display = text;
     const api = number;
     setTimeout(() => sendMessage(display, [], api), 100);
   }, [sendMessage]);
 
   const handleMultiSelect = useCallback((numbers, texts) => {
-    // For multi-select, send selected numbers as comma-separated, display selected texts
     const display = texts;
     const api = numbers;
     setTimeout(() => sendMessage(display, [], api), 100);
@@ -664,13 +634,8 @@ function App() {
   const handleSubmit = useCallback(async () => {
     setSubmitting(true);
     try {
-      // Find the summary message (last assistant message with 📋)
       const summaryMsg = [...messages].reverse().find(m => m.role === "assistant" && m.content.includes("📋"));
-
-      // POST to n8n webhook for ClickUp task creation
-      const res = await fetch(WEBHOOK_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch(WEBHOOK_URL, { method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           action: "submit",
           sessionId,
@@ -678,27 +643,38 @@ function App() {
           messages: messages.map(m => ({ role: m.role, content: m.content, ts: m.ts }))
         })
       });
-
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
       setSubmitted(true);
       setMessages(p => [...p, { id: uid(), role: "assistant",
-        content: "✅ **Request submitted!**\n\nIt's been logged with the DTI team. You'll get a confirmation email shortly.\n\nNeed to submit another? Just refresh to start a new conversation.", ts: Date.now() }]);
+        content: "✅ **Request submitted!**\n\nIt's been logged with the DTI team. You'll get a confirmation email shortly.\n\nNeed to submit another? Just refresh to start a new conversation.",
+        ts: Date.now() }]);
     } catch (err) {
       console.error("Submit error:", err);
       setMessages(p => [...p, { id: uid(), role: "assistant", content: "Something went wrong submitting. Please try again.", ts: Date.now() }]);
-    }
-    finally { setSubmitting(false); }
+    } finally { setSubmitting(false); }
   }, [messages, sessionId]);
 
+  // UPDATED: Now accepts all common document types
   const processFiles = useCallback(async (fileList) => {
     const added = [];
     for (const file of fileList) {
-      if (file.size > 10 * 1048576) continue;
-      if (!file.type.startsWith("image/") && file.type !== "application/pdf") continue;
-      const base64 = await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result.split(",")[1]); r.onerror = rej; r.readAsDataURL(file); });
-      added.push({ name: file.name, size: file.size, type: file.type, base64,
-        preview: file.type.startsWith("image/") ? URL.createObjectURL(file) : null });
+      if (file.size > 10 * 1048576) continue; // 10MB limit
+      // Check if file type is supported (images, text, or document types)
+      if (!isFileTypeSupported(file.type)) continue;
+
+      const base64 = await new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = () => res(r.result.split(",")[1]);
+        r.onerror = rej;
+        r.readAsDataURL(file);
+      });
+      added.push({
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        base64,
+        preview: file.type.startsWith("image/") ? URL.createObjectURL(file) : null
+      });
     }
     if (added.length) setFiles(p => [...p, ...added]);
   }, []);
@@ -712,15 +688,13 @@ function App() {
 
   return (
     <div style={{ height: "100vh", display: "flex", flexDirection: "column", background: "#F8F8F6", fontFamily: "'Sora', sans-serif" }}>
-
       {/* HEADER */}
       <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 20px",
-        background: "white", borderBottom: "1px solid #E7E5E4", flexShrink: 0 }}>
+                       background: "white", borderBottom: "1px solid #E7E5E4", flexShrink: 0 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <div style={{ width: 36, height: 36, borderRadius: 11,
-            background: "linear-gradient(135deg, #14B8A6, #0F766E)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            color: "white", fontSize: 17, fontWeight: 700, boxShadow: "0 2px 8px rgba(13,148,136,0.25)" }}>✦</div>
+          <div style={{ width: 36, height: 36, borderRadius: 11, background: "linear-gradient(135deg, #14B8A6, #0F766E)",
+                        display: "flex", alignItems: "center", justifyContent: "center", color: "white",
+                        fontSize: 17, fontWeight: 700, boxShadow: "0 2px 8px rgba(13,148,136,0.25)" }}>✦</div>
           <div>
             <div style={{ fontWeight: 600, fontSize: 14.5, color: "#1C1917", letterSpacing: -0.3 }}>DTI Intake Agent</div>
             <div style={{ fontSize: 11, color: "#78716C", letterSpacing: 0.1 }}>ACRRM Digital Technology &amp; Innovation</div>
@@ -728,9 +702,9 @@ function App() {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
           <div style={{ width: 8, height: 8, borderRadius: "50%",
-            background: isTyping ? "#F59E0B" : "#10B981",
-            boxShadow: isTyping ? "0 0 6px rgba(245,158,11,0.4)" : "0 0 6px rgba(16,185,129,0.4)",
-            transition: "all 0.3s ease" }} />
+                        background: isTyping ? "#F59E0B" : "#10B981",
+                        boxShadow: isTyping ? "0 0 6px rgba(245,158,11,0.4)" : "0 0 6px rgba(16,185,129,0.4)",
+                        transition: "all 0.3s ease" }} />
           <span style={{ fontSize: 12, color: "#78716C" }}>{isTyping ? "Typing…" : "Online"}</span>
         </div>
       </header>
@@ -743,25 +717,21 @@ function App() {
         onDrop={e => { e.preventDefault(); setDragOver(false); if (e.dataTransfer.files.length) processFiles(Array.from(e.dataTransfer.files)); }}>
         <div style={{ maxWidth: 660, margin: "0 auto" }}>
           {messages.map((m, idx) => (
-            <MessageBubble
-              key={m.id}
-              msg={m}
-              cardsActive={cardsActive}
-              onCardClick={handleCardClick}
-              onQuickReply={handleQuickReply}
-              onMultiSelect={handleMultiSelect}
-              isLatest={idx === messages.length - 1}
-              isTyping={isTyping}
-            />
+            <MessageBubble key={m.id} msg={m} cardsActive={cardsActive} onCardClick={handleCardClick}
+              onQuickReply={handleQuickReply} onMultiSelect={handleMultiSelect}
+              isLatest={idx === messages.length - 1} isTyping={isTyping} />
           ))}
           {isTyping && <TypingDots />}
         </div>
         {dragOver && (
-          <div style={{ position: "absolute", inset: 0, background: "rgba(20,184,166,0.06)", border: "2.5px dashed rgba(13,148,136,0.4)",
-            borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 20,
-            animation: "dropPulse 1.5s ease infinite", pointerEvents: "none" }}>
+          <div style={{ position: "absolute", inset: 0, background: "rgba(20,184,166,0.06)",
+                        border: "2.5px dashed rgba(13,148,136,0.4)", borderRadius: 12,
+                        display: "flex", alignItems: "center", justifyContent: "center", zIndex: 20,
+                        animation: "dropPulse 1.5s ease infinite", pointerEvents: "none" }}>
             <div style={{ padding: "14px 28px", borderRadius: 14, background: "white",
-              boxShadow: "0 4px 20px rgba(0,0,0,0.08)", fontWeight: 600, color: "#0F766E", fontSize: 14 }}>📎 Drop files here</div>
+                          boxShadow: "0 4px 20px rgba(0,0,0,0.08)", fontWeight: 600, color: "#0F766E", fontSize: 14 }}>
+              📎 Drop files here
+            </div>
           </div>
         )}
       </div>
@@ -772,10 +742,11 @@ function App() {
           <div style={{ maxWidth: 660, margin: "0 auto" }}>
             <button className="submit-btn" onClick={handleSubmit} disabled={submitting}
               style={{ width: "100%", padding: "15px 24px", borderRadius: 14, border: "none",
-                background: "linear-gradient(135deg, #0D9488 0%, #0F766E 50%, #115E59 100%)",
-                color: "white", fontFamily: "'Sora', sans-serif", fontWeight: 600, fontSize: 15, letterSpacing: -0.2,
-                cursor: submitting ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
-                opacity: submitting ? 0.8 : 1 }}>
+                       background: "linear-gradient(135deg, #0D9488 0%, #0F766E 50%, #115E59 100%)",
+                       color: "white", fontFamily: "'Sora', sans-serif", fontWeight: 600, fontSize: 15,
+                       letterSpacing: -0.2, cursor: submitting ? "default" : "pointer",
+                       display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+                       opacity: submitting ? 0.8 : 1 }}>
               {submitting ? (<><div style={{ width: 18, height: 18, border: "2.5px solid rgba(255,255,255,0.3)",
                 borderTopColor: "white", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />Submitting…</>) : (<>Submit Request →</>)}
             </button>
@@ -787,9 +758,9 @@ function App() {
       {submitted && (
         <div style={{ padding: "0 16px 12px", animation: "successPop 0.4s cubic-bezier(0.34,1.56,0.64,1)" }}>
           <div style={{ maxWidth: 660, margin: "0 auto", padding: "12px 20px", borderRadius: 14,
-            background: "#ECFDF5", border: "1px solid #A7F3D0",
-            display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-            fontWeight: 600, fontSize: 14, color: "#065F46" }}>✓ Request submitted</div>
+                        background: "#ECFDF5", border: "1px solid #A7F3D0",
+                        display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                        fontWeight: 600, fontSize: 14, color: "#065F46" }}>✓ Request submitted</div>
         </div>
       )}
 
@@ -799,8 +770,9 @@ function App() {
           <div style={{ maxWidth: 660, margin: "0 auto", display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4 }}>
             {files.map((f, i) => (
               <div key={i} className="file-chip">
-                {f.preview ? (<img src={f.preview} alt="" style={{ width: 30, height: 30, borderRadius: 7, objectFit: "cover" }} />) :
-                  (<div style={{ width: 30, height: 30, borderRadius: 7, background: "#EEF2FF", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>📄</div>)}
+                {f.preview ? (<img src={f.preview} alt="" style={{ width: 30, height: 30, borderRadius: 7, objectFit: "cover" }} />)
+                  : (<div style={{ width: 30, height: 30, borderRadius: 7, background: "#EEF2FF",
+                                   display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>📄</div>)}
                 <span style={{ color: "#44403C", maxWidth: 110, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.name}</span>
                 <span style={{ color: "#A8A29E", fontSize: 11 }}>{fmtSize(f.size)}</span>
                 <button className="file-chip-remove" onClick={() => setFiles(p => p.filter((_, j) => j !== i))} aria-label="Remove"><XIcon /></button>
@@ -814,22 +786,25 @@ function App() {
       <div style={{ background: "white", borderTop: files.length ? "none" : "1px solid #E7E5E4", padding: "12px 16px 14px", flexShrink: 0 }}>
         <div style={{ maxWidth: 660, margin: "0 auto" }}>
           <div className="input-ring" style={{ display: "flex", alignItems: "flex-end", gap: 8,
-            background: "#FAFAF9", border: "1.5px solid #E7E5E4", borderRadius: 22, padding: "6px 8px 6px 14px" }}>
+                                               background: "#FAFAF9", border: "1.5px solid #E7E5E4",
+                                               borderRadius: 22, padding: "6px 8px 6px 14px" }}>
             <button className="attach-btn" onClick={() => fileRef.current?.click()} aria-label="Attach file"><ClipIcon /></button>
             <textarea ref={inputRef} value={input} onChange={handleInputChange} onKeyDown={handleKeyDown}
               placeholder={submitted ? "Refresh to start a new request" : "Type your message…"} disabled={submitted} rows={1}
               style={{ flex: 1, border: "none", background: "transparent", fontSize: 14, lineHeight: 1.5,
-                color: "#1C1917", padding: "6px 0", maxHeight: 120, letterSpacing: -0.1 }} />
+                       color: "#1C1917", padding: "6px 0", maxHeight: 120, letterSpacing: -0.1 }} />
             <button onClick={() => canSend && sendMessage(input, files)} disabled={!canSend || submitted}
               style={{ width: 36, height: 36, borderRadius: "50%", border: "none",
-                background: canSend && !submitted ? "linear-gradient(135deg, #0D9488, #0F766E)" : "#E7E5E4",
-                color: canSend && !submitted ? "white" : "#A8A29E",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                cursor: canSend && !submitted ? "pointer" : "default", transition: "all 0.2s ease", flexShrink: 0 }}
-              aria-label="Send message"><SendIcon /></button>
+                       background: canSend && !submitted ? "linear-gradient(135deg, #0D9488, #0F766E)" : "#E7E5E4",
+                       color: canSend && !submitted ? "white" : "#A8A29E",
+                       display: "flex", alignItems: "center", justifyContent: "center",
+                       cursor: canSend && !submitted ? "pointer" : "default",
+                       transition: "all 0.2s ease", flexShrink: 0 }} aria-label="Send message"><SendIcon /></button>
           </div>
         </div>
-        <input type="file" ref={fileRef} hidden multiple accept="image/png,image/jpeg,image/gif,image/webp,application/pdf"
+        {/* UPDATED: Now accepts all common document types */}
+        <input type="file" ref={fileRef} hidden multiple
+          accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,text/plain,text/csv,application/rtf"
           onChange={e => { if (e.target.files.length) processFiles(Array.from(e.target.files)); e.target.value = ""; }} />
       </div>
     </div>
